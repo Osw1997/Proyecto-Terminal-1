@@ -60,7 +60,7 @@ def get_geourls(url_set):
         resp.close();
         session.close();
         return;
-        
+
 
 
 #info = get_geourls("https://lod-cloud.net/dataset/geolinkeddata")
@@ -74,13 +74,13 @@ def get_urls(cantidad):
     #url = 'http://web.mta.info/developers/turnstile.html';
     # Se establece la conexión a la URL
     response = requests.get(url);
-    # Se utiliza la herramienta BeautifulSoup para traducir el HTML en una 
+    # Se utiliza la herramienta BeautifulSoup para traducir el HTML en una
     # estructura 'BeautifulSoup'
     soup = BeautifulSoup(response.text, 'html.parser');
     # Se cuentan cuantas burbujas hay que analizar
     total_burbujas = len(soup.findAll('a'));
     print(total_burbujas)
-    total_burbujas = cantidad;
+    #total_burbujas = cantidad;
     # Array de todas las URLs a analizar
     url_burbujas = [];
     # Se analiza cada burbuja
@@ -120,16 +120,16 @@ def get_geoinfo():
             info.append(info_per_url);
     print(info);
     print(type(info));
-    
+
     #a = numpy.asarray(info)
     print('\n' * 2)
 
-    with open("LinkedData.csv", "w") as f:
+    with open("LinkedData_completo.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerows(info)
     #print(a);
     #numpy.savetxt("LinkedData.csv", a, delimiter=" ")
 
 # Inicio web scrapping
-get_urls(500);
+#get_urls(0);
 get_geoinfo();
