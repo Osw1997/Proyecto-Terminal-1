@@ -1,2 +1,4 @@
 SOA: file:///C:/Users/zacat/Downloads/IQSOA2007-07-1701_34_3B.pdf
 SOA: https://books.google.com.mx/books?id=-RKPoU2h_DMC&pg=PA23&dq=soa+arquitectura&hl=es&sa=X&ved=0ahUKEwiV5_XVzOXkAhUPiqwKHZNfCvoQ6AEITDAH#v=onepage&q=soa%20arquitectura&f=false
+
+Presentación Linked Data: https://www.nloug.nl/downloads/ogh20170622_martien_vos.pdf
