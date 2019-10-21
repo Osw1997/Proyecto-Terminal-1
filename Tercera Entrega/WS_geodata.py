@@ -9,12 +9,7 @@ from requests_html import HTMLSession
 import numpy
 import csv
 
-# https://towardsdatascience.com/how-to-web-scrape-with-python-in-4-minutes-bc49186a8460
-# https://www.edureka.co/blog/web-scraping-with-python/
-
 # https://lod-cloud.net/clouds/lod-cloud.svg
-
-
 
 def get_geourls(url_set):
     session = HTMLSession();
