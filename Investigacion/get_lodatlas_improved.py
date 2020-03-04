@@ -23,6 +23,7 @@ geo_lista = ['geo','geoda','geoide','geoponia','geonomia','geologia','geogonia',
                 'geognostic', 'geodynamic', 'geocentric', 'geocentric', 'geobotanic', 'geobotanic',
                 'geoespacial', 'geospatial', 'geodato', 'geodata']
 geo_lista = list(set(geo_lista))
+print('Palabras distintas: ' + str(len(geo_lista)))
 
 payload = {}
 headers = {
@@ -35,8 +36,10 @@ headers = {
 }
 
 archivo = open("LODAtlas_geourls_2.csv", "w", newline = '')
-archivo.write('Palabra,Category,url_name,count,selected\n')
+archivo.write('Palabra;Nombre repositorio;Nombre dataset;Titulo;Triple count;Conteo outgoing links;Conteo incoming link\n')
 
+
+total = 0
 for palabra in geo_lista:
     url = "http://lodatlas.lri.fr/lodatlas/rest/search?format=RDF&format=RDF-XML&format=SPARQL&fields=" + palabra + \
           "%3Bname%2Ctitle%2Cnotes%2Cresources.usedClasses%2Cresources.classLabels%2Cresources.usedProperties" \
@@ -46,18 +49,31 @@ for palabra in geo_lista:
     # url = "http://lodatlas.lri.fr/lodatlas/rest/search?format=RDF&format=RDF-XML&format=SPARQL&fields=" + palabra + \
     #       "%3Bname%2Ctitle%2Cnotes%2Cresources.usedClasses%2Cresources.classLabels%2Cresources.usedProperties" \
     #       "%2Cresources.propertyLabels%2Cresources.vocabularies&isAnd=true&show=format"
-    resp = requests.get(url, headers=headers, data=payload).json()
-    print(resp['facetList']['groups'])
-    time.sleep(1000)
+    # resp = requests.get(url, headers=headers, data=payload).json()
 
-    for category in resp['facetList']['groups']:
-        if category['category'] in ['vocabs', 'props', 'classes']:
+    print('---> Palabra: ' + palabra)
+    # Se extrae la información
+    resp = requests.get(url, headers=headers, data=payload).json()
+    print('#Listas: ' + str(len(resp['hitList']['hits'])))
+    # Si lo devuelto no tiene información, se le dará 5 oportunidades para devolver info.
+    chances = 5
+    while len(resp['hitList']['hits']) <= 0 and chances > 0:
+        resp = requests.get(url, headers=headers, data=payload).json()
+        chances -= 1
+        time.sleep(0.5)
+
+    # Una vez devuelta la información y no agotadas las oportunidades, se guarda
+    if len(resp['hitList']['hits']):
+        total += len(resp['hitList']['hits'])
+        for list in resp['hitList']['hits']:
             try:
-                print(category['category'])
-                for list in category['list']:
-                    print(list)
-                    archivo.write(palabra + ',' + str(category['category']) + ',' + str(list['name']) + ',' +
-                                  str(list['count']) + ',' + str(list['selected']) + '\n')
+                # 'Palabra,Nombre repositorio,Nombre dataset,titulo,triple count,Conteo outgoing links,Conteo incoming link\n'
+                archivo.write(palabra + ';' + list['rN'] + ';' + list['name'] + ';' + list['title'] + ';' +
+                              str(list['tc']) + ';' + str(list['olC']) + ';' + str(list['ilC']) + '\n')
             except Exception as e:
+                print('Error escritura')
+                print(list)
                 print(e)
+
+print('Total registros: ' + str(total))
 archivo.close()
