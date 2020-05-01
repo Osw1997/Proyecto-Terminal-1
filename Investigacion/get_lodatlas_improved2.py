@@ -27,13 +27,15 @@ print('Palabras distintas: ' + str(len(geo_lista)))
 
 payload = {}
 headers = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0',
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language': 'es-MX,es;q=0.8,en-US;q=0.5,en;q=0.3',
   'Connection': 'keep-alive',
-  'Upgrade-Insecure-Requests': '1',
-  'Cache-Control': 'max-age=0'
+  'Accept': 'application/json, text/javascript, */*; q=0.01',
+  'X-Requested-With': 'XMLHttpRequest',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36',
+  'Content-Type': 'application/json; charset=utf-8',
+  'Referer': 'http://lodatlas.lri.fr/',
+  'Accept-Language': 'es-US,es;q=0.9,en-US;q=0.8,en;q=0.7,es-419;q=0.6'
 }
+
 
 headers_se = {
   'Connection': 'keep-alive',
@@ -46,15 +48,19 @@ headers_se = {
 }
 
 
-archivo = open("LODAtlas_geourls_wSparqlEndpoint.csv", "w", newline = ' ')
-archivo.write('Palabra;Nombre repositorio;Nombre dataset;Titulo;Triple count;Conteo outgoing links;Conteo incoming link\n')
+archivo = open("LODAtlas_geourls_wSparqlEndpoint.csv", "w", newline='\n')
+archivo.write('Palabra@Nombre repositorio@Nombre dataset@Titulo@Triple count@Conteo outgoing links@Conteo incoming link\n')
 
 
 total = 0
 for palabra in geo_lista:
-    url = "http://lodatlas.lri.fr/lodatlas/rest/search?format=RDF&format=RDF-XML&format=SPARQL&fields=" + palabra + \
-          "%3Bname%2Ctitle%2Cnotes%2Cresources.usedClasses%2Cresources.classLabels%2Cresources.usedProperties" \
-          "%2Cresources.propertyLabels%2Cresources.vocabularies&isAnd=true&show=format "
+    # url = "http://lodatlas.lri.fr/lodatlas/rest/search?format=RDF&format=RDF-XML&format=SPARQL&fields=" + palabra + \
+    #       "%3Bname%2Ctitle%2Cnotes%2Cresources.usedClasses%2Cresources.classLabels%2Cresources.usedProperties" \
+    #       "%2Cresources.propertyLabels%2Cresources.vocabularies&isAnd=true&show=format "
+
+    url = "http://lodatlas.lri.fr/lodatlas/rest/search?format=SPARQL&format=api%2Fsparql&format=SPARQL%20web%20form" \
+          "&fields=" + palabra + "%3Bname%2Ctitle%2Cnotes%2Cresources.usedClasses%2Cresources.classLabels%2Cresources" \
+          ".usedProperties%2Cresources.propertyLabels%2Cresources.vocabularies&isAnd=true&show=format "
 
 
     # url = "http://lodatlas.lri.fr/lodatlas/rest/search?format=RDF&format=RDF-XML&format=SPARQL&fields=" + palabra + \
@@ -90,8 +96,8 @@ for palabra in geo_lista:
                 print(e)
             try:
                 # 'Palabra,Nombre repositorio,Nombre dataset,titulo,triple count,Conteo outgoing links,Conteo incoming link\n'
-                archivo.write(palabra + ';' + list['rN'] + ';' + list['name'] + ';' + list['title'] + ';' +
-                              str(list['tc']) + ';' + str(list['olC']) + ';' + str(list['ilC']) + '\n')
+                archivo.write(palabra + '@' + list['rN'] + '@' + list['name'] + '@' + list['title'] + '@' +
+                              str(list['tc']) + '@' + str(list['olC']) + '@' + str(list['ilC']) + '\n')
             except Exception as e:
                 print('Error escritura')
                 print(list)
